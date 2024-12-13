@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: self-service-backend
+  name: self-service-backend
+  namespace: self-service
+spec:
+  selector:
+    matchLabels:
+      app: self-service-backend
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: self-service-backend
+      labels:
+        app: self-service-backend
+    spec:
+      containers:
+      - name: self-service-backend
+        image: self-service-backend
+        imagePullPolicy: Never
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 256Mi
+        env:
+          - name: PORT
+            value: "8080"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: self_service
+          - name: NOTIFICATION_WEBHOOK_URL
+            value: "http://api.cloudburger.com.br/webhook"
+          - name: MERCADO_PAGO_API_URL
+            value: "https://api.mercadopago.com//instore/orders/qr/seller/collectors/1995444195/pos/SELFSERVICE2024/qrs"
+          - name: MERCADO_PAGO_CREATE_QR_API_URL
+            value: "https://api.mercadopago.com//instore/orders/qr/seller/collectors/1995444195/pos/SELFSERVICE2024/qrs"
+          - name: MERCADO_PAGO_GET_QR_INFO_API_URL
+            value: "https://api.mercadolibre.com/merchant_orders/"
+          - name: MERCADO_PAGO_API_TOKEN
+            value: "APP_USR-7785106356073680-091816-d1c29245fbb399a70031428b1c22463c-1995444195"
+          - name: DATABASE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: configmap-self-service-backend
+                key: DATABASE_HOST
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: secret-self-service-backend
+                key: DATABASE_USER
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secret-self-service-backend
+                key: DATABASE_PASSWORD

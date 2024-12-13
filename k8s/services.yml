@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: self-service-backend
+  name: self-service-backend
+  namespace: self-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30201
+  selector:
+    app: self-service-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: self-service-postgres
+  name: self-service-postgres
+  namespace: self-service
+spec:
+  ports:
+  - name: http
+    port: 5432
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: self-service-postgres
+  type: ClusterIP
