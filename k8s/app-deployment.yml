@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: self-service-backend
-        image: self-service-backend
+        image: cloud-burger/self-service-backend
         imagePullPolicy: Never
         ports:
           - name: http
