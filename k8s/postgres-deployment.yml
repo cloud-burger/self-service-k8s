@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: self-service-postgres
+  name: self-service-postgres
+  namespace: self-service
+spec:
+  selector:
+    matchLabels:
+      app: self-service-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: self-service-postgres
+    spec:
+      initContainers:
+      - name: clone-migrations
+        image: alpine:latest
+        command: ['sh', '-c', 'apk add git && git clone https://github.com/cloud-burger/self-service.git && cp self-service/migrations/init.sql /docker-entrypoint-initdb.d']
+        volumeMounts:
+          - name: migrations
+            mountPath: /docker-entrypoint-initdb.d
+      containers:
+        - image: postgres:16
+          name: self-service-postgres
+          ports:
+            - name: http
+              containerPort: 5432
+              protocol: TCP
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secret-self-service
+                  key: DATABASE_HOST
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-self-service
+                  key: DATABASE_PASSWORD
+          volumeMounts:
+            - name: migrations
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: data
+          emptyDir:
+            medium: "Memory"
+        - name: migrations
+          emptyDir:
+            medium: "Memory"
