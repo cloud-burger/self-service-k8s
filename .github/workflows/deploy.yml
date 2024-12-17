@@ -63,6 +63,21 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name infra-kubernetes-prd --region us-east-1
+
+      - name: Apply kube manifest
+        run: kubectl apply -f ./k8s/manifest.yml
+
+      - name: Apply kube workload
+        run: kubectl apply -f ./k8s/workloads/manifest.yml
+
   terraform_destroy:
     name: "Terraform Destroy"
     runs-on: ubuntu-latest

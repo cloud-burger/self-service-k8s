@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap-self-service
-data:
-  DATABASE_HOST: "postgres"
