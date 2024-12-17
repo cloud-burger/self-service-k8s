@@ -16,7 +16,7 @@ spec:
         app: self-service-backend
     spec:
       containers:
-        - image: S
+        - image: 594646746001.dkr.ecr.us-east-1.amazonaws.com/cloud-burger:0.1.0
           name: self-service-backend
           ports:
             - name: http
@@ -46,11 +46,11 @@ spec:
             - name: MERCADO_PAGO_API_TOKEN
               value: "APP_USR-7785106356073680-091816-d1c29245fbb399a70031428b1c22463c-1995444195"
             - name: DATABASE_HOST
-              value: HOST
+              value: postgres.cf6esggi8qzc.us-east-1.rds.amazonaws.com
             - name: DATABASE_USER
-              value: USER
+              value: self_service
             - name: DATABASE_PASSWORD
-              value: PASSWORD1234
+              value: self_service
 ---
 apiVersion: v1
 kind: Service
