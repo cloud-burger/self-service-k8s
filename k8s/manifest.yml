@@ -14,16 +14,15 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-  - hosts:
-    - "*"
-    port:
-      name: http
-      number: 80
-      protocol: HTTP
-  - hosts:
-    - "*"
-    port:
-      name: http-443
-      number: 443
-      protocol: HTTP
-	
+    - hosts:
+        - "*"
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+    - hosts:
+        - "*"
+      port:
+        name: http-443
+        number: 443
+        protocol: HTTP
