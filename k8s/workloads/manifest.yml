@@ -46,20 +46,11 @@ spec:
             - name: MERCADO_PAGO_API_TOKEN
               value: "APP_USR-7785106356073680-091816-d1c29245fbb399a70031428b1c22463c-1995444195"
             - name: DATABASE_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: configmap-self-service-backend
-                  key: DATABASE_HOST
+              value: HOST
             - name: DATABASE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: secret-self-service-backend
-                  key: DATABASE_USER
+              value: USER
             - name: DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret-self-service-backend
-                  key: DATABASE_PASSWORD
+              value: PASSWORD1234
 ---
 apiVersion: v1
 kind: Service
@@ -118,21 +109,3 @@ spec:
       route:
         - destination:
             host: self-service-backend
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap-self-service
-data:
-  DATABASE_HOST: "postgres"
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: secret-self-service
-type: Opaque
-stringData:
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "foobarbaz"
