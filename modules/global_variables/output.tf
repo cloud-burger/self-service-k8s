@@ -5,7 +5,7 @@ output "account_id" {
 }
 
 output "aws_region" {
-  value = "us-east-2"
+  value = "us-east-1"
 }
 
 output "aws_profile" {

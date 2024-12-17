@@ -1,20 +1,14 @@
+data "aws_availability_zones" "available" {
+  # Do not include local zones
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
+
 module "global_variables" {
   source      = "./modules/global_variables"
   environment = var.environment
-}
-
-data "aws_instance" "ec2" {
-  filter {
-    name   = "tag:eks:nodegroup-name"
-    values = ["NG-cloud-burger"]
-  }
-
-  filter {
-    name   = "instance-state-name"
-    values = ["running"]
-  }
-
-  depends_on = [aws_eks_node_group.cluster_node_group]
 }
 
 data "terraform_remote_state" "database_state" {
@@ -23,7 +17,7 @@ data "terraform_remote_state" "database_state" {
   config = {
     bucket = "cloud-burger-state"
     key    = "prod/database.tfstate"
-    region = "us-east-2"
+    region = "us-east-1"
   }
 }
 
@@ -43,6 +37,22 @@ terraform {
   backend "s3" {
     bucket = "cloud-burger-state"
     key    = "prod/eks.tfstate"
-    region = "us-east-2"
+    region = "us-east-1"
+  }
+  required_version = ">= 1.9"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.34"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.10"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.22"
+    }
   }
 }
