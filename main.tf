@@ -17,7 +17,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "cloud-burger-state"
+    bucket = "cloud-burger-states"
     key    = "prod/eks.tfstate"
     region = "us-east-1"
   }
